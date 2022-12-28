@@ -28,7 +28,19 @@ async function capture(page) {
         // console.log(`发送 WebSocket 消息：${params.response.payloadData}`)
     })
     client.on('Network.webSocketFrameReceived', (params) => {
-        console.log(`收到 WebSocket 消息：`, params.response)
+        // console.log(`收到 WebSocket 消息：`, params.response)
+        const data = params.response.payloadData
+        try {
+            const {res_decode} = require("./douyin")
+            const arr = res_decode(data)
+            for (const obj of arr) {
+                if (obj.content) {
+                    console.log(``, obj.content)
+                }
+            }
+        }catch (e) {
+            console.log("报错", e)
+        }
         // callback(params.response.payloadData);
     })
     client.on('Network.webSocketWillSendHandshakeRequest', (params) => {
@@ -48,8 +60,8 @@ async function start() {
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await capture(page)
-    // await page.goto("https://live.douyin.com/412583216850?cover_type=&enter_from_merge=web_related_page&enter_method=web_card&game_name=%E6%97%85%E8%A1%8C&is_recommend=1&live_type=game&more_detail=&room_id=7181767947298294539&stream_type=vertical&title_type=1&web_live_page=entertainment_7181767947298294539&web_live_tab=7181767947298294539")
-    await page.goto("http://kedou.workerman.net/")
+    await page.goto("https://live.douyin.com/20928596860")
+    // await page.goto("http://kedou.workerman.net/")
 }
 
 start().then()
