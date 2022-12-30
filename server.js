@@ -1,21 +1,9 @@
 const puppeteer = require('puppeteer');
 
-let funcs = [];
+const ws = require('nodejs-websocket');
+const POST = 10024;
 
-function forwardToWs(data) {
-    // console.log(data);
-    funcs = funcs.filter(function(ws) {
-        try {
-            ws.send(data)
-        } catch(e) {
-            console.error(e)
-            return false;
-        }
-        return true;
-    });
-}
-
-async function capture(page) {
+async function listenWebsocket(page) {
     const client = await page.target().createCDPSession()
     await client.send('Network.enable')
     client.on('Network.webSocketCreated', (params) => {
@@ -51,50 +39,69 @@ async function capture(page) {
     })
 }
 
-async function otherPage(browser) {
-    const page = await browser.newPage();
-    await capture(page, forwardToWs)
+function sleep() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(' enough sleep~');
+        }, 20000);
+    })
 }
 
 async function start() {
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
-    await capture(page)
-    await page.goto("https://live.douyin.com/20928596860")
+    // await listenWebsocket(page)
+    // await page.goto("https://live.douyin.com/20928596860")
+
+
+    await page.goto("https://channels.weixin.qq.com/platform/live/liveBuild")
     // await page.goto("http://kedou.workerman.net/")
+
+    await sleep()
+    // const cookies = await page.cookies();
+    // console.log(cookies)
 }
 
 start().then()
 
-// (async () => {
-//     const browser = await puppeteer.launch({headless: false});
-//     const page = await browser.newPage();
-//     //创建 CDP 会话
-//     let cdpSession = await page.target().createCDPSession();
-//     //开启网络调试,监听 Chrome DevTools Protocol 中 Network 相关事件
-//     await cdpSession.send('Network.enable');
-//     //监听 webSocketFrameReceived 事件，获取对应的数据
-//     cdpSession.on('Network.webSocketFrameReceived', frame => {
-//         let payloadData = frame.response.payloadData;
-//         console.log('获取到websocket接口数据：', payloadData);
-//         if(payloadData.includes('push:query')){
-//             //解析payloadData，拿到服务端推送的数据
-//             let res = JSON.parse(payloadData.match(/\{.*\}/)[0]);
-//             if(res.code !== 200){
-//                 console.log(`调用websocket接口出错:code=${res.code},message=${res.message}`);
-//             }else{
-//                 console.log('获取到websocket接口数据：', res.result);
-//             }
-//         }
-//     });
-//     cdpSession.on('Network.webSocketWillSendHandshakeRequest', function(params){
-//         console.log(`准备发送 WebSocket 握手消息`)
-//     })
-//     cdpSession.on('Network.webSocketHandshakeResponseReceived', function(params){
-//         console.log(`接收到 WebSocket 握手消息`)
-//     })
-//     await page.goto('http://kedou.workerman.net');
-//     // await page.waitForFunction('window.renderdone', {polling: 20});
-//     // await page.close();
-//     // await browser.close();
-// })();
+
+const server = ws.createServer(connect => {
+    let isArr = []
+    let i = 0
+    connect.on("text", data => {
+        console.log("received: "+data);
+        let obj = {}
+        const arr = ["重庆", "北京", "上海"]
+        var index = Math.floor((Math.random()*arr.length));
+        if (!isArr[i]) {
+            obj = {
+                userId: i,
+                userName: i + "发发发",
+                content: arr[index],
+                value: 1,
+            }
+            isArr[i] = true
+        } else {
+            obj = {
+                userId: i,
+                userName: i + "发发发",
+                content: "1",
+                value: 1,
+            }
+        }
+        i++
+        connect.sendText(JSON.stringify(obj));
+    });
+
+    connect.on("close", (code, reason) => {
+        console.log("connection closed!");
+    });
+
+    connect.on('error', ()=>{
+        console.log("connection error!");
+    });
+});
+
+// server.listen(POST, ()=>{
+//     console.log("websocket server start success!");
+// });

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+    <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+<div id="container" style="height: 100%"></div>
+
+<script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+
+<script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var app = {};
+
+    let province = [
+        {
+            name: "澳门",
+            title: "澳门",
+            fullName: "澳门特别行政区",
+            value: 1,
+            itemStyle: {
+                color: '#0099e5'
+            }
+        },
+        {
+            name: "香港",
+            title: "香港",
+            fullName: "香港特别行政区",
+            value: 1,
+            itemStyle: {
+                color: '#ff4c4c'
+            }
+        },
+        {
+            name: "新疆",
+            fullName: "新疆维吾尔自治区",
+            value: 1,
+            itemStyle: {
+                color: '#34bf49'
+            }
+        },
+        {
+            name: "宁夏",
+            title: "宁夏",
+            fullName: "宁夏回族自治区",
+            value: 1,
+            itemStyle: {
+                color: '#00a98f'
+            }
+        },
+        {
+            name: "西藏",
+            title: "西藏",
+            fullName: "西藏自治区",
+            value: 1,
+            itemStyle: {
+                color: '#be0027'
+            }
+        },
+        {
+            name: "广西",
+            title: "广西",
+            fullName: "广西壮族自治区",
+            value: 1,
+            itemStyle: {
+                color: '#cf8d2e'
+            }
+        },
+        {
+            name: "内蒙古",
+            title: "内蒙古",
+            fullName: "内蒙古自治区",
+            value: 1,
+            itemStyle: {
+                color: '#e4e932'
+            }
+        },
+        {
+            name: "台湾",
+            title: "台湾",
+            fullName: "台湾省",
+            value: 1,
+            itemStyle: {
+                color: '#2c9f45'
+            }
+        },
+        {
+            name: "青海",
+            title: "青海",
+            fullName: "青海省",
+            value: 1,
+            itemStyle: {
+                color: '#371777'
+            }
+        },
+        {
+            name: "甘肃",
+            title: "甘肃",
+            fullName: "甘肃省",
+            value: 1,
+            itemStyle: {
+                color: '#52325d'
+            }
+        },
+        {
+            name: "陕西",
+            title: "陕西",
+            fullName: "陕西省",
+            value: 1,
+            itemStyle: {
+                color: '#511378'
+            }
+        },
+        {
+            name: "云南",
+            title: "云南",
+            fullName: "云南省",
+            value: 1,
+            itemStyle: {
+                color: '#fbb034'
+            }
+        },
+        {
+            name: "贵州",
+            title: "贵州",
+            fullName: "贵州省",
+            value: 1,
+            itemStyle: {
+                color: '#c1d82f'
+            }
+        },
+        {
+            name: "四川",
+            title: "四川",
+            fullName: "四川省",
+            value: 1,
+            itemStyle: {
+                color: '#00a4e4'
+            }
+        },
+        {
+            name: "海南",
+            title: "海南",
+            fullName: "海南省",
+            value: 1,
+            itemStyle: {
+                color: '#8a7967'
+            }
+        },
+        {
+            name: "广东",
+            title: "广东",
+            fullName: "广东省",
+            value: 1,
+            itemStyle: {
+                color: '#6a737b'
+            }
+        },
+        {
+            name: "湖南",
+            title: "湖南",
+            fullName: "湖南省",
+            value: 1,
+            itemStyle: {
+                color: '#0abf53'
+            }
+        },
+        {
+            name: "湖北",
+            title: "湖北",
+            fullName: "湖北省",
+            value: 1,
+            itemStyle: {
+                color: '#8ec06c'
+            }
+        },
+        {
+            name: "河南",
+            title: "河南",
+            fullName: "河南省",
+            value: 1,
+            itemStyle: {
+                color: '#279b37'
+            }
+        },
+        {
+            name: "山东",
+            title: "山东",
+            fullName: "山东省",
+            value: 1,
+            itemStyle: {
+                color: '#008374'
+            }
+        },
+        {
+            name: "江西",
+            title: "江西",
+            fullName: "江西省",
+            value: 1,
+            itemStyle: {
+                color: '#89ba16'
+            }
+        },
+        {
+            name: "福建",
+            title: "福建",
+            fullName: "福建省",
+            value: 1,
+            itemStyle: {
+                color: '#d20962'
+            }
+        },
+        {
+            name: "安徽",
+            title: "安徽",
+            fullName: "安徽省",
+            value: 1,
+            itemStyle: {
+                color: '#f47721'
+            }
+        },
+        {
+            name: "浙江",
+            title: "浙江",
+            fullName: "浙江省",
+            value: 1,
+            itemStyle: {
+                color: '#7ac143'
+            }
+        },
+        {
+            name: "江苏",
+            title: "江苏",
+            fullName: "江苏省",
+            value: 1,
+            itemStyle: {
+                color: '#00a78e'
+            }
+        },
+        {
+            name: "黑龙江",
+            title: "黑龙江",
+            fullName: "黑龙江省",
+            value: 1,
+            itemStyle: {
+                color: '#00bce4'
+            }
+        },
+        {
+            name: "吉林",
+            title: "吉林",
+            fullName: "吉林省",
+            value: 1,
+            itemStyle: {
+                color: '#7d3f98'
+            }
+        },
+        {
+            name: "辽宁",
+            title: "辽宁",
+            fullName: "辽宁省",
+            value: 1,
+            itemStyle: {
+                color: '#037ef3'
+            }
+        },
+        {
+            name: "山西",
+            title: "山西",
+            fullName: "山西省",
+            value: 1,
+            itemStyle: {
+                color: '#f85a40'
+            }
+        },
+        {
+            name: "河北",
+            title: "河北",
+            fullName: "河北省",
+            value: 1,
+            itemStyle: {
+                color: '#00c16e'
+            }
+        },
+        {
+            name: "重庆",
+            title: "重庆",
+            fullName: "重庆市",
+            value: 1,
+            itemStyle: {
+                color: '#7552cc'
+            }
+        },
+        {
+            name: "上海",
+            title: "上海",
+            fullName: "上海市",
+            value: 1,
+            itemStyle: {
+                color: '#0cb9c1'
+            }
+        },
+        {
+            name: "天津",
+            title: "天津",
+            fullName: "天津市",
+            value: 1,
+            itemStyle: {
+                color: '#f48924'
+            }
+        },
+        {
+            name: "北京",
+            title: "北京",
+            fullName: "北京市",
+            value: 1,
+            itemStyle: {
+                color: '#ffc845'
+            }
+        }
+    ]
+
+    let memberMap = {}
+    let provinceMember = []
+    for (let i = 0; i < province.length; i++) {
+        provinceMember[i] = []
+    }
+
+    setData(province)
+
+    //go on
+    socket = new WebSocket(`ws://127.0.0.1:10024`);
+    //相当于channelReado, ev 收到服务器端回送的消息
+    socket.onmessage = (ev) => {
+        const data = ev.data
+        if (data === 'ping') {
+            return
+        }
+        const obj = JSON.parse(data)
+        // console.log(obj)
+        let {index, isHas} = filterProvinceName(obj.userId, obj.userName, obj.content)
+        if (index < 0) {
+            return;
+        }
+        obj.content = 1
+        changeData(isHas ? '' : obj.userName, index, obj.content * obj.value)
+    }
+
+    //相当于连接开启(感知到连接开启)
+    socket.onopen = (ev) => {
+        console.log("连接成功")
+        socket.send("连接成功")
+
+        setInterval(() => {
+            socket.send("pong")
+        }, 2000)
+    }
+
+    //相当于连接关闭(感知到连接关闭)
+    socket.onclose = (ev) => {
+        console.log("连接关闭了..")
+    }
+
+    function filterProvinceName(userId, userName, provinceName) {
+        if (memberMap[userId] && memberMap[userId] >= 0) {
+            return {index: memberMap[userId], isHas: 1}
+        }
+        for (let i = 0; i < province.length; i++) {
+            if (province[i].fullName.includes(provinceName)) {
+                memberMap[userId] = i
+                provinceMember[i].push(userName.substring(0,5))
+                return {index: i, isHas: 0}
+            }
+        }
+        return {index: -1, isHas: 0}
+    }
+
+    function changeData(userName, provinceIndex, value) {
+        province[provinceIndex].value += value
+        if (userName.length > 0) {
+            province[provinceIndex].name = province[provinceIndex].title + "  " + (province[provinceIndex].value - 1) + "票" + "  " + provinceMember[provinceIndex].join("  ")
+        }
+        setData(province)
+    }
+
+    function setData(data) {
+        const option = {
+            series: [
+                {
+                    type: 'treemap',
+                    data: data,
+                    animation: true,
+                    animationDurationUpdate: 350,
+                    animationEasing: 'quinticOut',
+                    label: {
+                        position: 10,
+                        // fontSize: 15,
+                        // height: 100,
+                        lineHeight: 20,
+                        padding: 4,
+                        overflow: 'break' //文字过多换行，/(4)看我看我！！！
+                    }
+                }
+            ]
+        };
+
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+
+        window.addEventListener('resize', myChart.resize);
+    }
+
+</script>
+</body>
+</html>
